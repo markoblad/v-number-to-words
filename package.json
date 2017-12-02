@@ -1,0 +1,39 @@
+{
+  "name": "v-number-to-words",
+  "version": "1.0.0",
+  "description": "spell out numbers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markoblad/v-number-to-words.git"
+  },
+  "keywords": [
+    "spell",
+    "out",
+    "numbers"
+  ],
+  "author": "Mark Oblad <mark.oblad@gmail.com>",
+  "license": "CC-BY-NC-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/markoblad/v-number-to-words/issues"
+  },
+  "homepage": "https://github.com/markoblad/v-number-to-words#readme",
+  "devDependencies": {
+    "@types/lodash": "^4.14.86",
+    "@types/mathjs": "0.0.35",
+    "@types/underscore.string": "0.0.32",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "mathjs": "^3.17.0",
+    "underscore.string": "^3.3.4"
+  }
+}

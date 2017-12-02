@@ -1,0 +1,35 @@
+# v-number-to-words
+A Node.js module that returns the spelling of numbers, whether passed as a string or a float
+## Installation 
+```sh
+npm install v-number-to-words --save
+yarn add v-number-to-words
+bower install pluralize --save
+```
+## Usage
+### Javascript
+```javascript
+var vn2w = require('v-number-to-words');
+var boys = vn2w.numberToWords('1.1');
+```
+```sh
+Output should be 'one and one tenth'
+```
+### TypeScript
+```typescript
+import { numberToWords } from 'v-number-to-words';
+console.log(numberToWords(1.1))
+```
+```sh
+Output should be 'one and one tenth'
+```
+### AMD
+```javascript
+define(function(require,exports,module){
+  var vn2w = require('v-number-to-words');
+});
+```
+## Test 
+```sh
+npm run test
+```
