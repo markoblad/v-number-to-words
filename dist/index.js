@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var _ = require("lodash");
-var s = require("underscore.string");
-var math = require("mathjs");
+var lodash_1 = require("lodash");
+var underscore_string_1 = require("underscore.string");
+var mathjs_1 = require("mathjs");
 var ZERO_TO_NINETEEN_MAP = [
     'zero',
     'one',
@@ -90,10 +90,10 @@ function eachSlice(value, size, callback) {
     }
 }
 function parseBigOrZero(value) {
-    return math.bignumber(isNumeric(value) ? value : 0.0);
+    return mathjs_1.bignumber(isNumeric(value) ? value : 0.0);
 }
 function parseZeroPaddedInt(value) {
-    if (s.isBlank(value) || value === 0 || value === '0' || s.isBlank(value.toString().replace(/0/g, ''))) {
+    if (underscore_string_1.isBlank(value) || value === 0 || value === '0' || underscore_string_1.isBlank(value.toString().replace(/0/g, ''))) {
         return 0;
     }
     value = value.toString();
@@ -107,16 +107,16 @@ function numberToWords(value) {
         digits = pieces[0], _a = pieces[1], decimals = _a === void 0 ? '' : _a;
     }
     else if (isString(value) && (/\./).test(value)) {
-        var str = s.trim(value).replace(/\$|\%|\,|\_/g, '');
+        var str = underscore_string_1.trim(value).replace(/\$|\%|\,|\_/g, '');
         digits = str.split('.')[0];
         decimals = str.split('.')[1] || '';
     }
     else {
-        digits = s.trim(value).replace(/\$|\%|\,|\_/g, '');
+        digits = underscore_string_1.trim(value).replace(/\$|\%|\,|\_/g, '');
         decimals = '';
     }
     decimals = decimals.replace(/0+$/g, '');
-    _.each(_.reject([digits, decimals], function (i) {
+    lodash_1.each(lodash_1.reject([digits, decimals], function (i) {
         return !i || i.length === 0;
     }), function (numberSet, numberSetIndex) {
         var isDecimals = numberSetIndex === 1;
@@ -130,7 +130,7 @@ function numberToWords(value) {
         }
         else {
             var numberZerosToAdd = ((numberSet.length % 3) === 0 ? 0 : 3 - (numberSet.length % 3));
-            _.times(numberZerosToAdd, function (i) {
+            lodash_1.times(numberZerosToAdd, function (i) {
                 numberSet = (isDecimals ? (numberSet + '0') : ('0' + numberSet));
             });
             var index_1 = 0;
@@ -145,7 +145,7 @@ function numberToWords(value) {
                 // let ones = parseZeroPaddedInt(number.toString().substr(number.toString().length - 1));
                 if (isDecimals && decimals.length === 1) {
                     words.push(ZERO_TO_NINETEEN_MAP[hundreds]);
-                    words.push((words[words.length - 2] === 'and' && _.last(words) === 'one') ?
+                    words.push((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ?
                         'tenth' : 'tenths');
                 }
                 else if (isDecimals && decimals.length === 2) {
@@ -157,7 +157,7 @@ function numberToWords(value) {
                         if (tens > 0)
                             words.push(ZERO_TO_NINETEEN_MAP[tens]);
                     }
-                    words.push((words[words.length - 2] === 'and' && _.last(words) === 'one') ?
+                    words.push((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ?
                         'one-hundreth' : 'one-hundreths');
                 }
                 else {
@@ -181,7 +181,7 @@ function numberToWords(value) {
             if (isDecimals && decimals.length > 2) {
                 var illion = ILLIONS[Math.floor(numberSet.length / 3) - 1];
                 words.push('one-' + illion +
-                    ((words[words.length - 2] === 'and' && _.last(words) === 'one') ? 'th' : 'ths'));
+                    ((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ? 'th' : 'ths'));
             }
         }
     });
