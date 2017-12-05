@@ -1,7 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = require("lodash");
-var underscore_string_1 = require("underscore.string");
 var mathjs_1 = require("mathjs");
 var ZERO_TO_NINETEEN_MAP = [
     'zero',
@@ -77,6 +75,9 @@ var ILLIONS = [
     'octotrigintillion',
     'novemtrigintillion',
 ];
+function isBlank(value) {
+    return (/^\s*$/).test(makeString(value));
+}
 function isNumeric(value) {
     return !isNaN(parseFloat(value)) && isFinite(value);
 }
@@ -89,11 +90,19 @@ function eachSlice(value, size, callback) {
         callback(value.slice(i, i + size));
     }
 }
+function last(value) {
+    return value ? value[value.length - 1] : undefined;
+}
+function makeString(value) {
+    if (value == null)
+        return '';
+    return '' + value;
+}
 function parseBigOrZero(value) {
     return mathjs_1.bignumber(isNumeric(value) ? value : 0.0);
 }
 function parseZeroPaddedInt(value) {
-    if (underscore_string_1.isBlank(value) || value === 0 || value === '0' || underscore_string_1.isBlank(value.toString().replace(/0/g, ''))) {
+    if (isBlank(value) || value === 0 || value === '0' || isBlank(value.toString().replace(/0/g, ''))) {
         return 0;
     }
     value = value.toString();
@@ -101,54 +110,56 @@ function parseZeroPaddedInt(value) {
     return parseInt(value.slice(firstNonZeroIndex, value.length), 10);
 }
 function numberToWords(value) {
-    var words = [], digits = '', decimals = '';
+    var words = [], integerPart = '', fractionalPart = '';
     if (typeof (value) === 'number') {
-        var pieces = parseBigOrZero(value).toString().split('.').slice(0, 2);
-        digits = pieces[0], _a = pieces[1], decimals = _a === void 0 ? '' : _a;
-    }
-    else if (isString(value) && (/\./).test(value)) {
-        var str = underscore_string_1.trim(value).replace(/\$|\%|\,|\_/g, '');
-        digits = str.split('.')[0];
-        decimals = str.split('.')[1] || '';
+        var numberParts = parseBigOrZero(value).toString().split('.').slice(0, 2);
+        integerPart = numberParts[0], _a = numberParts[1], fractionalPart = _a === void 0 ? '' : _a;
     }
     else {
-        digits = underscore_string_1.trim(value).replace(/\$|\%|\,|\_/g, '');
-        decimals = '';
+        var str = makeString(value).replace(/^\s+|\s+$/gm, '').replace(/\$|\%|\,|\_/g, '');
+        integerPart = str.split('.')[0];
+        if ((/\./).test(str)) {
+            fractionalPart = str.split('.')[1] || '';
+        }
+        else {
+            fractionalPart = '';
+        }
     }
-    decimals = decimals.replace(/0+$/g, '');
-    lodash_1.each(lodash_1.reject([digits, decimals], function (i) {
-        return !i || i.length === 0;
-    }), function (numberSet, numberSetIndex) {
-        var isDecimals = numberSetIndex === 1;
-        if (isDecimals && decimals.length > 0)
+    fractionalPart = fractionalPart.replace(/0+$/g, '');
+    [integerPart, fractionalPart].forEach(function (numberPart, numberPartIndex) {
+        if (!numberPart || numberPart.length === 0)
+            return;
+        var isFractionalPart = numberPartIndex === 1;
+        if (isFractionalPart && fractionalPart.length > 0)
             words.push('and');
-        if (!isDecimals && parseZeroPaddedInt(numberSet) === 0) {
+        if (!isFractionalPart && parseZeroPaddedInt(numberPart) === 0) {
             words.push('zero');
         }
-        else if (isDecimals && parseZeroPaddedInt(numberSet) === 0) {
+        else if (isFractionalPart && parseZeroPaddedInt(numberPart) === 0) {
             // do nothing
         }
         else {
-            var numberZerosToAdd = ((numberSet.length % 3) === 0 ? 0 : 3 - (numberSet.length % 3));
-            lodash_1.times(numberZerosToAdd, function (i) {
-                numberSet = (isDecimals ? (numberSet + '0') : ('0' + numberSet));
-            });
+            var numberZerosToAdd = ((numberPart.length % 3) === 0 ? 0 : 3 - (numberPart.length % 3));
+            var step = void 0;
+            for (step = 0; step < numberZerosToAdd; step++) {
+                numberPart = (isFractionalPart ? (numberPart + '0') : ('0' + numberPart));
+            }
             var index_1 = 0;
-            var sliceCount = Math.floor(numberSet.length / 3);
+            var sliceCount = Math.floor(numberPart.length / 3);
             var lastIndex_1 = sliceCount - 1;
-            var splitNumberSet = numberSet.split('');
-            eachSlice(splitNumberSet, 3, function (numberPiece) {
+            var splitNumberPart = numberPart.split('');
+            eachSlice(splitNumberPart, 3, function (numberPiece) {
                 var number = parseZeroPaddedInt(numberPiece.join(''));
                 var hundreds = Math.floor(number / 100);
                 var tens = Math.floor((number - (hundreds * 100)) / 10);
                 var ones = Math.floor((number - (hundreds * 100) - (tens * 10)));
                 // let ones = parseZeroPaddedInt(number.toString().substr(number.toString().length - 1));
-                if (isDecimals && decimals.length === 1) {
+                if (isFractionalPart && fractionalPart.length === 1) {
                     words.push(ZERO_TO_NINETEEN_MAP[hundreds]);
-                    words.push((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ?
+                    words.push((words[words.length - 2] === 'and' && last(words) === 'one') ?
                         'tenth' : 'tenths');
                 }
-                else if (isDecimals && decimals.length === 2) {
+                else if (isFractionalPart && fractionalPart.length === 2) {
                     if (hundreds < 2 && (hundreds > 0 || tens > 0)) {
                         words.push(ZERO_TO_NINETEEN_MAP[10 * hundreds + tens]);
                     }
@@ -157,7 +168,7 @@ function numberToWords(value) {
                         if (tens > 0)
                             words.push(ZERO_TO_NINETEEN_MAP[tens]);
                     }
-                    words.push((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ?
+                    words.push((words[words.length - 2] === 'and' && last(words) === 'one') ?
                         'one-hundreth' : 'one-hundreths');
                 }
                 else {
@@ -178,10 +189,10 @@ function numberToWords(value) {
                 }
                 index_1 += 1;
             });
-            if (isDecimals && decimals.length > 2) {
-                var illion = ILLIONS[Math.floor(numberSet.length / 3) - 1];
+            if (isFractionalPart && fractionalPart.length > 2) {
+                var illion = ILLIONS[Math.floor(numberPart.length / 3) - 1];
                 words.push('one-' + illion +
-                    ((words[words.length - 2] === 'and' && lodash_1.last(words) === 'one') ? 'th' : 'ths'));
+                    ((words[words.length - 2] === 'and' && last(words) === 'one') ? 'th' : 'ths'));
             }
         }
     });
