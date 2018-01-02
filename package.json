@@ -20,7 +20,7 @@
     "vn2w"
   ],
   "author": "Mark Oblad <moblad@valcu.co>",
-  "license": "CC-BY-NC-SA-4.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/markoblad/v-number-to-words/issues"
   },
