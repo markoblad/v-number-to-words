@@ -98,8 +98,33 @@ function makeString(value) {
         return '';
     return '' + value;
 }
+function numberToNonExponentString(value) {
+    var str = (value || 0).toString();
+    var exponentialNotation = str.match(/e([\+\-]?)/);
+    if (exponentialNotation) {
+        var exponentialNotationCapture = exponentialNotation[0];
+        var exponentialParts = str.split(exponentialNotationCapture).slice(0, 2);
+        var normalizedSignificand = exponentialParts[0];
+        var exponent = parseInt(exponentialParts[1], 10);
+        var numberParts = normalizedSignificand.split('.').slice(0, 2);
+        var integerPart = '', fractionalPart = '';
+        integerPart = numberParts[0], _a = numberParts[1], fractionalPart = _a === void 0 ? '' : _a;
+        fractionalPart = fractionalPart.replace(/0+$/g, '');
+        if (exponentialNotationCapture === 'e-') {
+            str = '0.' + repeat('0', exponent - 1) + integerPart + fractionalPart;
+        }
+        else {
+            str = (integerPart === '0' ? '' : integerPart) + fractionalPart + repeat('0', exponent - fractionalPart.length);
+        }
+    }
+    return str;
+    var _a;
+}
 function parseBigOrZero(value) {
-    return mathjs_1.bignumber(isNumeric(value) ? value : 0.0);
+    // console.log('parseBigOrZero value: ', value);
+    var result = mathjs_1.bignumber(isNumeric(value) ? value : 0.0);
+    // console.log('parseBigOrZero result: ', result);
+    return result;
 }
 function parseZeroPaddedInt(value) {
     if (isBlank(value) || value === 0 || value === '0' || isBlank(value.toString().replace(/0/g, ''))) {
@@ -109,22 +134,27 @@ function parseZeroPaddedInt(value) {
     var firstNonZeroIndex = value.search(/(?!0)/);
     return parseInt(value.slice(firstNonZeroIndex, value.length), 10);
 }
+function repeat(str, count) {
+    var step, result = '';
+    for (step = 0; step < count; step++) {
+        result += str;
+    }
+    return result;
+}
 function numberToWords(value) {
-    var words = [], integerPart = '', fractionalPart = '';
+    var words = [], str, numberParts, integerPart = '', fractionalPart = '', sign = '';
     if (typeof (value) === 'number') {
-        var numberParts = parseBigOrZero(value).toString().split('.').slice(0, 2);
-        integerPart = numberParts[0], _a = numberParts[1], fractionalPart = _a === void 0 ? '' : _a;
+        str = parseBigOrZero(value).toString().replace(/^\s+$/gm, '');
     }
     else {
-        var str = makeString(value).replace(/^\s+|\s+$/gm, '').replace(/\$|\%|\,|\_/g, '');
-        integerPart = str.split('.')[0];
-        if ((/\./).test(str)) {
-            fractionalPart = str.split('.')[1] || '';
-        }
-        else {
-            fractionalPart = '';
-        }
+        str = mathjs_1.bignumber(makeString(value).replace(/^\s+|\s+$/gm, '').replace(/\$|\%|\,|\_/g, '')).toString();
     }
+    sign = str.match(/^\-/) ? 'negative ' : '';
+    if (sign) {
+        str = str.replace(/^\-/, '');
+    }
+    numberParts = numberToNonExponentString(str).split('.').slice(0, 2);
+    integerPart = numberParts[0], _a = numberParts[1], fractionalPart = _a === void 0 ? '' : _a;
     fractionalPart = fractionalPart.replace(/0+$/g, '');
     [integerPart, fractionalPart].forEach(function (numberPart, numberPartIndex) {
         if (!numberPart || numberPart.length === 0)
@@ -139,11 +169,11 @@ function numberToWords(value) {
             // do nothing
         }
         else {
-            var numberZerosToAdd = ((numberPart.length % 3) === 0 ? 0 : 3 - (numberPart.length % 3));
-            var step = void 0;
-            for (step = 0; step < numberZerosToAdd; step++) {
-                numberPart = (isFractionalPart ? (numberPart + '0') : ('0' + numberPart));
-            }
+            var modulo = 3;
+            var numberPartRemainder = numberPart.length % modulo;
+            var numberZerosToAdd = (numberPartRemainder === 0 ? 0 : modulo - numberPartRemainder);
+            var zeros = repeat('0', numberZerosToAdd);
+            numberPart = (isFractionalPart ? (numberPart + zeros) : (zeros + numberPart));
             var index_1 = 0;
             var sliceCount = Math.floor(numberPart.length / 3);
             var lastIndex_1 = sliceCount - 1;
@@ -196,7 +226,7 @@ function numberToWords(value) {
             }
         }
     });
-    return words.join(' ');
+    return sign + words.join(' ');
     var _a;
 }
 exports.numberToWords = numberToWords;

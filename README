@@ -1,5 +1,5 @@
 # v-number-to-words
-A Node.js module that returns the spelling of numbers, whether passed as a string or a float
+A Node.js module that returns the spelling of numbers, whether passed as a string or a float.  Generally reliable for up to 16 (or 17 in some cases) of floats.
 ## Installation 
 ```sh
 npm install v-number-to-words --save

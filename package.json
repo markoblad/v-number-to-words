@@ -1,6 +1,6 @@
 {
   "name": "v-number-to-words",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "spell out numbers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,9 @@
   "keywords": [
     "spell",
     "out",
-    "numbers"
+    "numbers",
+    "v-number-to-words",
+    "vn2w"
   ],
   "author": "Mark Oblad <moblad@valcu.co>",
   "license": "CC-BY-NC-SA-4.0",

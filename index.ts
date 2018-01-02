@@ -104,8 +104,32 @@ function makeString(value?: any): string {
   return '' + value;
 }
 
+function numberToNonExponentString(value: number | string): string {
+  let str = (value || 0).toString();
+  let exponentialNotation = str.match(/e([\+\-]?)/);
+  if (exponentialNotation) {
+    let exponentialNotationCapture = exponentialNotation[0];
+    let exponentialParts: string[] = str.split(exponentialNotationCapture).slice(0, 2);
+    let normalizedSignificand: string = exponentialParts[0];
+    let exponent: number = parseInt(exponentialParts[1], 10);
+    let numberParts: string[] = normalizedSignificand.split('.').slice(0, 2);
+    let integerPart: string = '', fractionalPart: string = '';
+    [integerPart, fractionalPart = ''] = numberParts;
+    fractionalPart = fractionalPart.replace(/0+$/g, '');
+    if (exponentialNotationCapture === 'e-') {
+      str = '0.' + repeat('0', exponent - 1) + integerPart + fractionalPart;
+    } else {
+      str = (integerPart === '0' ? '' : integerPart) + fractionalPart + repeat('0', exponent - fractionalPart.length);
+    }
+  }
+  return str;
+}
+
 function parseBigOrZero(value: any) {
-  return bignumber(isNumeric(value) ? value : 0.0);
+  // console.log('parseBigOrZero value: ', value);
+  let result = bignumber(isNumeric(value) ? value : 0.0);
+  // console.log('parseBigOrZero result: ', result);
+  return result;
 }
 
 function parseZeroPaddedInt(value?: any): number {
@@ -117,20 +141,27 @@ function parseZeroPaddedInt(value?: any): number {
   return parseInt(value.slice(firstNonZeroIndex, value.length), 10);
 }
 
-export function numberToWords(value: number | string) {
-  let words: string[] = [], integerPart: string = '', fractionalPart: string = '';
-  if (typeof(value) === 'number') {
-    let numberParts: string[] = parseBigOrZero(value).toString().split('.').slice(0, 2);
-    [integerPart, fractionalPart = ''] = numberParts;
-  } else {
-    let str = makeString(value).replace(/^\s+|\s+$/gm,'').replace(/\$|\%|\,|\_/g, '');
-    integerPart = str.split('.')[0];
-    if ((/\./).test(str)) {
-      fractionalPart = str.split('.')[1] || '';
-    } else {
-      fractionalPart = '';
-    }
+function repeat(str: string, count: number): string {
+  let step: number, result: string = '';
+  for (step = 0; step < count; step++) {
+    result += str;
   }
+  return result
+}
+
+export function numberToWords(value: number | string) {
+  let words: string[] = [], str: string, numberParts: string[], integerPart: string = '', fractionalPart: string = '', sign: string = '';
+  if (typeof(value) === 'number') {
+    str = parseBigOrZero(value).toString().replace(/^\s+$/gm,'');
+  } else {
+    str = bignumber(makeString(value).replace(/^\s+|\s+$/gm,'').replace(/\$|\%|\,|\_/g, '')).toString();
+  }
+  sign = str.match(/^\-/) ? 'negative ' : '';
+  if (sign) {
+    str = str.replace(/^\-/, '');
+  }
+  numberParts = numberToNonExponentString(str).split('.').slice(0, 2);
+  [integerPart, fractionalPart = ''] = numberParts;
   fractionalPart = fractionalPart.replace(/0+$/g, '');
   [integerPart, fractionalPart].forEach(function(numberPart, numberPartIndex) {
     if (!numberPart || numberPart.length === 0) return;
@@ -141,11 +172,11 @@ export function numberToWords(value: number | string) {
     } else if (isFractionalPart && parseZeroPaddedInt(numberPart) === 0) {
       // do nothing
     } else {
-      let numberZerosToAdd = ((numberPart.length % 3) === 0 ? 0 : 3 - (numberPart.length % 3));
-      let step;
-      for (step = 0; step < numberZerosToAdd; step++) {
-        numberPart = (isFractionalPart ? (numberPart + '0') : ('0' + numberPart));
-      }
+      let modulo = 3;
+      let numberPartRemainder = numberPart.length % modulo;
+      let numberZerosToAdd = (numberPartRemainder === 0 ? 0 : modulo - numberPartRemainder);
+      let zeros: string = repeat('0', numberZerosToAdd)
+      numberPart = (isFractionalPart ? (numberPart + zeros) : (zeros + numberPart));
 
       let index = 0;
       let sliceCount = Math.floor(numberPart.length / 3);
@@ -194,5 +225,5 @@ export function numberToWords(value: number | string) {
       }
     }
   });
-  return words.join(' ');
+  return sign + words.join(' ');
 }
