@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha test/*.js - - -R spec"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,10 @@
     "out",
     "numbers",
     "v-number-to-words",
-    "vn2w"
+    "vn2w",
+    "valcu"
   ],
-  "author": "Mark Oblad <moblad@valcu.co>",
+  "author": "Mark Oblad <moblad@valcu.co> (https://twitter.com/markoblad)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/markoblad/v-number-to-words/issues"
@@ -28,6 +30,8 @@
   "devDependencies": {
     "@types/mathjs": "0.0.35",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "typescript": "^2.6.2"
   },

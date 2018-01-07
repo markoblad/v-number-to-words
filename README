@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/markoblad/v-number-to-words.svg?branch=master)](https://travis-ci.org/markoblad/v-number-to-words)[![Coverage Status](https://coveralls.io/repos/github/markoblad/v-number-to-words/badge.svg?branch=master)](https://coveralls.io/github/markoblad/v-number-to-words?branch=master)
+
 # v-number-to-words
 A Node.js module that returns the spelling of numbers, whether passed as a string or a float.  Generally reliable for up to 16 (or 17 in some cases) of floats.
 ## Installation 
