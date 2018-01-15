@@ -2,10 +2,10 @@
   "name": "v-number-to-words",
   "version": "1.0.7",
   "description": "spell out numbers",
-  "main": "dist/index.js",
+  "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && uglifyjs dist/index.js --compress --mangle  > ./dist/index.min.js",
     "test": "mocha --reporter spec",
     "cover": "istanbul cover node_modules/mocha/bin/_mocha test/*.js - - -R spec"
   },
@@ -33,9 +33,11 @@
     "coveralls": "^3.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "uglifyjs": "^2.4.11"
   },
   "dependencies": {
-    "mathjs": "^3.17.0"
+    "mathjs": "^3.17.0",
+    "v-tools": "0.0.10"
   }
 }
