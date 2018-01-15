@@ -37,7 +37,6 @@
     "uglifyjs": "^2.4.11"
   },
   "dependencies": {
-    "mathjs": "^3.17.0",
-    "v-tools": "0.0.10"
+    "mathjs": "^3.17.0"
   }
 }
