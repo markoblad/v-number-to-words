@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mathjs_1 = require("mathjs");
+var mathjs = require("mathjs");
 var ZERO_TO_NINETEEN_MAP = [
     'zero',
     'one',
@@ -122,7 +122,7 @@ function numberToNonExponentString(value) {
 }
 function parseBigOrZero(value) {
     // console.log('parseBigOrZero value: ', value);
-    var result = mathjs_1.bignumber(isNumeric(value) ? value : 0.0);
+    var result = mathjs.bignumber(isNumeric(value) ? value : 0.0);
     // console.log('parseBigOrZero result: ', result);
     return result;
 }
@@ -148,7 +148,7 @@ function numberToWords(value) {
         str = parseBigOrZero(value).toString().replace(/^\s+$/gm, '');
     }
     else {
-        str = mathjs_1.bignumber(makeString(value).replace(/^\s+|\s+$/gm, '').replace(/\$|\%|\,|\_/g, '')).toString();
+        str = mathjs.bignumber(makeString(value).replace(/^\s+|\s+$/gm, '').replace(/\$|\%|\,|\_/g, '')).toString();
     }
     sign = str.match(/^\-/) ? 'negative ' : '';
     if (sign) {

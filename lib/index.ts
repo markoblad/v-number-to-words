@@ -1,4 +1,4 @@
-import { bignumber } from 'mathjs';
+import * as mathjs from 'mathjs';
 
 const ZERO_TO_NINETEEN_MAP: string[] = [
   'zero',
@@ -127,7 +127,7 @@ function numberToNonExponentString(value: number | string): string {
 
 function parseBigOrZero(value: any) {
   // console.log('parseBigOrZero value: ', value);
-  let result = bignumber(isNumeric(value) ? value : 0.0);
+  let result = mathjs.bignumber(isNumeric(value) ? value : 0.0);
   // console.log('parseBigOrZero result: ', result);
   return result;
 }
@@ -154,7 +154,7 @@ export function numberToWords(value: number | string) {
   if (typeof(value) === 'number') {
     str = parseBigOrZero(value).toString().replace(/^\s+$/gm,'');
   } else {
-    str = bignumber(makeString(value).replace(/^\s+|\s+$/gm,'').replace(/\$|\%|\,|\_/g, '')).toString();
+    str = mathjs.bignumber(makeString(value).replace(/^\s+|\s+$/gm,'').replace(/\$|\%|\,|\_/g, '')).toString();
   }
   sign = str.match(/^\-/) ? 'negative ' : '';
   if (sign) {
