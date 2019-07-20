@@ -1,6 +1,6 @@
 {
   "name": "v-number-to-words",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "spell out numbers",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
