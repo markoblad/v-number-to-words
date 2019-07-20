@@ -99,6 +99,7 @@ function makeString(value) {
     return '' + value;
 }
 function numberToNonExponentString(value) {
+    var _a;
     var str = (value || 0).toString();
     var exponentialNotation = str.match(/e([\+\-]?)/);
     if (exponentialNotation) {
@@ -118,7 +119,6 @@ function numberToNonExponentString(value) {
         }
     }
     return str;
-    var _a;
 }
 function parseBigOrZero(value) {
     // console.log('parseBigOrZero value: ', value);
@@ -142,6 +142,7 @@ function repeat(str, count) {
     return result;
 }
 function numberToWords(value) {
+    var _a;
     var words = [], str, numberParts, integerPart = '', fractionalPart = '', sign = '';
     if (typeof (value) === 'number') {
         str = parseBigOrZero(value).toString().replace(/^\s+$/gm, '');
@@ -227,6 +228,5 @@ function numberToWords(value) {
         }
     });
     return sign + words.join(' ');
-    var _a;
 }
 exports.numberToWords = numberToWords;

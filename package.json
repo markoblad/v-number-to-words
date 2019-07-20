@@ -29,15 +29,14 @@
   "homepage": "https://github.com/markoblad/v-number-to-words#readme",
   "devDependencies": {
     "@types/mathjs": "^6.0.0",
-    "chai": "^4.1.2",
-    "coveralls": "^3.0.0",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.5",
     "istanbul": "^0.4.5",
-    "mocha": "^4.0.1",
-    "typescript": "^2.6.2",
+    "mocha": "^6.2.0",
+    "typescript": "^3.5.3",
     "uglifyjs": "^2.4.11"
   },
   "dependencies": {
-    "extend": "^3.0.2",
     "mathjs": "^6.0.3"
   }
 }
