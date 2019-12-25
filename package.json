@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/markoblad/v-number-to-words#readme",
   "devDependencies": {
-    "@types/mathjs": "^6.0.1",
+    "@types/mathjs": "6.0.2",
     "chai": "^4.2.0",
     "coveralls": "^3.0.5",
     "istanbul": "^0.4.5",
@@ -37,6 +37,6 @@
     "uglifyjs": "^2.4.11"
   },
   "dependencies": {
-    "mathjs": "^6.0.4"
+    "mathjs": "6.2.5"
   }
 }
