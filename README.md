@@ -7,7 +7,6 @@ A Node.js module that returns the spelling of numbers, whether passed as a strin
 ```sh
 npm install v-number-to-words --save
 yarn add v-number-to-words
-bower install pluralize --save
 ```
 ## Usage
 ### Javascript
