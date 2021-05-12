@@ -37,6 +37,6 @@
     "uglifyjs": "^2.4.11"
   },
   "dependencies": {
-    "mathjs": "6.2.5"
+    "mathjs": "7.5.1"
   }
 }
